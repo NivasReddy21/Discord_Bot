@@ -3,11 +3,12 @@ from discord.ext import commands
 import random
 import pytz
 from pytz import all_timezones
+import wikipediaapi
 
 from datetime import datetime
 
-TOKEN = 'NjcxMDAwNTY4MzQ0NDc3Njk3.Xi2kgw.wWoYZcRPRXS7ZlstoPCFr4jVZtU'
-GUILD = 'bot_testing'
+TOKEN = 'NjcxMDAwNTY4MzQ0NDc3Njk3.Xi7WEg.IugT8TYV4dSG_M31V1V9x3F5PN4'
+# GUILD = 'bot_testing'
 
 client = commands.Bot(command_prefix = '@')
 
@@ -38,6 +39,16 @@ async def date_time(ctx, *, question):
     time_zone = pytz.timezone(question) 
     datetime_tz = datetime.now(time_zone)
     await ctx.send(f'Time at {question} is {datetime_tz}')
+
+@client.command()
+async def whois(ctx, *, question):
+    
+    wiki_wiki = wikipediaapi.Wikipedia('en')
+    page = wiki_wiki.page(question)
+    page_summary = page.summary
+    await ctx.send(f'{page_summary[0:1000]}')
+
+
 
 
 @client.event
