@@ -5,35 +5,23 @@ import pytz
 from pytz import all_timezones
 import wikipediaapi
 import requests, json
-# import os
-
+import os
+from res.imgs import lists
 from datetime import datetime
+
+tokens = []
 
 base_url = "http://api.openweathermap.org/data/2.5/weather?"
 
+client = commands.Bot(command_prefix = '!')
 
-client = commands.Bot(command_prefix = '@')
+def getTokens():
+    fileManager = open('res/TOKENS.txt', 'r')  #make the file in such a way that token[0] is for news, token[1] for weather, token[2] for bot
+    tokenText = fileManager.read()
+    global tokens
+    tokens = tokenText.split('\n')
 
-# id = '669759094290120735'
-
-
-# @client.command()
-
-# async def load(ctx, extension):
-    
-#     client.load_extension(f'cogs.{extension}')
-
-# @client.command()
-
-# async def unload(ctx, extension):
-    
-#     client.unload_extension(f'cogs.{extension}')
-
-
-# for filename in os.listdir('./cogs'):
-#     if filename.endswith('.py'):
-#         client.load_extension(f'cogs.{filename[:-3]}')
-
+getTokens()
 
 @client.command(aliases=['hey', 'hello', 'hi', 'wassup', 'hey there'])
 async def greeting(ctx):
@@ -77,7 +65,7 @@ async def _whois(ctx, *, question):
 async def weather(ctx, *, question):
 
     city_name = question
-    complete_url = base_url + "appid=" + APIKEY + "&q=" + city_name
+    complete_url = base_url + "appid=" + tokens[1] + "&q=" + city_name
     response = requests.get(complete_url)
     x = response.json() 
 
@@ -119,10 +107,11 @@ async def on_message(message):
 
         await client.process_commands(message)
 
-@client.command(aliases = ['pic'])
+@client.command(aliases = ['pic', 'sendmeme', 'meme'])
 async def picture(message):
-    imgs = ['img.jpg', 'Imgs.jpg', 'imgsss.jpg', 'pic.jpg']
-    await message.channel.send(file=discord.File(random.choice(imgs)))
+    lists.create_list()
+    img = lists.imgs
+    await message.channel.send(file=discord.File(random.choice(img)))
 
 
 @client.event
@@ -133,7 +122,7 @@ async def on_ready():
     print('--------')
 
 
-client.run(TOKEN)
+client.run(tokens[0])
 
 
 
