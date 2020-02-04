@@ -9,6 +9,18 @@ import os
 from res.imgs import lists
 from datetime import datetime
 
+cur_dir = os.path.dirname("res/imgs/")
+list1 = os.listdir(cur_dir)
+imgs = []
+
+def create_list():
+    for i in list1:
+        
+        if i.endswith('.jpg') or i.endswith('.jpeg'):
+            imgs.append(i)
+
+    return imgs
+
 tokens = []
 
 base_url = "http://api.openweathermap.org/data/2.5/weather?"
@@ -109,9 +121,10 @@ async def on_message(message):
 
 @client.command(aliases = ['pic', 'sendmeme', 'meme'])
 async def picture(message):
-    lists.create_list()
-    img = lists.imgs
-    await message.channel.send(file=discord.File(random.choice(img)))
+    create_list()
+    img = imgs
+    files = f'/home/nivas/Desktop/Discord_Bot/res/imgs/{random.choice(img)}' 
+    await message.channel.send(file=discord.File(files))
 
 
 @client.event
